@@ -5,5 +5,7 @@ import com.github.ypiel.jfind.FileInfo;
 public interface IAcceptFile {
 
     boolean accept(FileInfo fi);
+    String getParamName();
+    String getDefaultParam();
 
 }

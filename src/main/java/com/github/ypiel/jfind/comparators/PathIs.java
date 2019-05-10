@@ -11,11 +11,35 @@ public class PathIs implements IAcceptFile{
     private Pattern pattern;
     private boolean revert;
 
-    public PathIs(String name, boolean isExact, boolean revert) {
+    public PathIs setName(String name) {
         this.name = name;
+        this.buildPattern();
+
+        return this;
+    }
+
+    public PathIs setParamName(String s){
+        return this.setName(s);
+    }
+
+    public PathIs isExact(boolean isExactt) {
         this.isExact = isExact;
+        this.buildPattern();
+
+        return this;
+    }
+
+    public PathIs setParamExact(String exact){
+        return this.isExact(Boolean.parseBoolean(exact));
+    }
+
+    public PathIs isRevert(boolean revert) {
         this.revert = revert;
 
+        return this;
+    }
+
+    private void buildPattern(){
         if(!isExact){
             pattern = Pattern.compile(name);
         }
@@ -36,5 +60,15 @@ public class PathIs implements IAcceptFile{
         }
 
         return accept;
+    }
+
+    @Override
+    public String getParamName(){
+        return "pathIs";
+    }
+
+    @Override
+    public String getDefaultParam(){
+        return "name";
     }
 }

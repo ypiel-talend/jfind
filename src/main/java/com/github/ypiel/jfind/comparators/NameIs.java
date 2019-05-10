@@ -11,11 +11,35 @@ public class NameIs implements IAcceptFile{
     private Pattern pattern;
     private boolean revert;
 
-    public NameIs(String name, boolean isExact, boolean revert) {
+    public NameIs setName(String nam) {
         this.name = name;
+        this.buildPattern();
+
+        return this;
+    }
+
+    public NameIs setParamName(String s){
+        return this.setName(s);
+    }
+
+    public NameIs isExact(boolean isExact) {
         this.isExact = isExact;
+        this.buildPattern();
+
+        return this;
+    }
+
+    public NameIs setParamExact(String s){
+        return this.isExact(Boolean.parseBoolean(s));
+    }
+
+    public NameIs isRevert(boolean revert) {
         this.revert = revert;
 
+        return this;
+    }
+
+    private void buildPattern(){
         if(!isExact){
             pattern = Pattern.compile(name);
         }
@@ -36,5 +60,15 @@ public class NameIs implements IAcceptFile{
         }
 
         return accept;
+    }
+
+    @Override
+    public String getParamName(){
+        return "nameIs";
+    }
+
+    @Override
+    public String getDefaultParam(){
+        return "name";
     }
 }

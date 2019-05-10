@@ -1,8 +1,9 @@
 package com.github.ypiel.jfind;
 
-import org.apache.commons.cli.*;
 
-import java.io.FileNotFoundException;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.LoggerFactory;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,49 +15,33 @@ public class JFindMain {
 
     public static void main(String[] args) {
         try {
+            ILoggerFactory iLoggerFactory = LoggerFactory.getILoggerFactory();
             manageOptions(args);
+            JFind jf = new JFind(rootSearchPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void manageOptions(String[] args) throws IllegalArgumentException, ParseException {
-        Options options = buildOptions();
-
+    private static void manageOptions(String[] args) throws IllegalArgumentException {
         if (args.length <= 0) {
-            usage(options);
+            usage();
         }
 
-        String root = args[0];
-        Path p = Paths.get(root);
+        rootSearchPath = args[0];
+        Path p = Paths.get(rootSearchPath);
         if (!Files.exists(p)) {
-            throw new IllegalArgumentException("The given search root folder doesn't exist '" + root + "'.");
+            throw new IllegalArgumentException("The given search root folder doesn't exist '" + rootSearchPath + "'.");
         }
         if (!Files.isDirectory(p)) {
-            throw new IllegalArgumentException("The given search root folder must be a folder '" + root + "'.");
+            throw new IllegalArgumentException("The given search root folder must be a folder '" + rootSearchPath + "'.");
         }
 
         String[] parameters = Arrays.copyOfRange(args, 1, args.length);
 
-        CommandLineParser parser = new DefaultParser();
-        CommandLine line = parser.parse(options, parameters, true);
-
-
-
     }
 
-    private static Options buildOptions() {
-        Options options = new Options();
-        options.addOption("ot", true, "Search for files older than...");
-        options.addOption("name", true, "Search file with their name matching the given regex");
-        options.addOption("path", true,"Search for files into a path matching this regex");
-        return options;
-    }
-
-    private static void usage(Options options) {
-        HelpFormatter hf = new HelpFormatter();
-        hf.printHelp("jfind rootSearchPath", options);
-        System.exit(0);
+    private static void usage() {
     }
 
 }
